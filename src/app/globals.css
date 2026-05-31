@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-brand: #076292;
+  --color-brand-dark: #054e73;
+  --color-amber: #FBAD1F;
+}
+
+/* ── Blog preview / ProseMirror editor styles ──────────────
+   Matches website .blog-content styles exactly so the editor
+   is a true WYSIWYG preview of the published post.
+──────────────────────────────────────────────────────────── */
+.blog-preview,
+.ProseMirror {
+  min-height: 360px;
+  padding: 1.25rem 1.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: #475569;
+  outline: none;
+}
+
+.blog-preview h1, .ProseMirror h1 {
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.blog-preview h2, .ProseMirror h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.35;
+}
+
+.blog-preview h3, .ProseMirror h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 1.5rem;
+  margin-bottom: 0.375rem;
+}
+
+.blog-preview p, .ProseMirror p {
+  margin-bottom: 1rem;
+  color: #475569;
+}
+
+.blog-preview ul, .ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.blog-preview ol, .ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.blog-preview li, .ProseMirror li {
+  margin-bottom: 0.25rem;
+  color: #475569;
+}
+
+.blog-preview strong, .ProseMirror strong {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.blog-preview em, .ProseMirror em {
+  font-style: italic;
+}
+
+.blog-preview u, .ProseMirror u {
+  text-decoration: underline;
+}
+
+.blog-preview a, .ProseMirror a {
+  color: #076292;
+  text-decoration: none;
+}
+.blog-preview a:hover, .ProseMirror a:hover {
+  text-decoration: underline;
+}
+
+.blog-preview hr, .ProseMirror hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 1.5rem 0;
+}
+
+.blog-preview blockquote, .ProseMirror blockquote {
+  border-left: 3px solid #076292;
+  padding-left: 1rem;
+  margin-left: 0;
+  color: #64748b;
+  font-style: italic;
+}
+
+.blog-preview img, .ProseMirror img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 16px -4px rgba(7, 98, 146, 0.18);
+}
+
+/* Image node-view wrapper owns the vertical margin; reset the inner img
+   so margin isn't doubled (wrapper my-6 + global img margin). */
+.img-nodeview { margin: 1.5rem 0; }
+.img-nodeview img { margin: 0; }
+
+/* Selected image in editor */
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 2px solid #076292;
+  outline-offset: 2px;
+}
+
+/* TipTap placeholder */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #94a3b8;
+  pointer-events: none;
+  height: 0;
+}
+
+/* ── Live page preview (mirrors website .blog-content) ──────── */
+.blog-content { font-size: 0.9375rem; line-height: 1.75; color: #475569; }
+.blog-content h1 { font-size: 1.625rem; font-weight: 700; color: #0f172a; margin: 2rem 0 0.5rem; line-height: 1.3; }
+.blog-content h2 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 1.75rem 0 0.5rem; line-height: 1.35; }
+.blog-content h3 { font-size: 1.0625rem; font-weight: 700; color: #0f172a; margin: 1.5rem 0 0.375rem; }
+.blog-content p { margin-bottom: 1rem; }
+.blog-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+.blog-content ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
+.blog-content li { margin-bottom: 0.25rem; }
+.blog-content strong, .blog-content b { font-weight: 600; color: #0f172a; }
+.blog-content em, .blog-content i { font-style: italic; }
+.blog-content u { text-decoration: underline; }
+.blog-content a { color: #076292; text-decoration: none; }
+.blog-content a:hover { text-decoration: underline; }
+.blog-content hr { border: none; border-top: 1px solid #e2e8f0; margin: 1.5rem 0; }
+.blog-content blockquote { border-left: 3px solid #076292; padding-left: 1rem; margin-left: 0; color: #64748b; font-style: italic; }
+.blog-content img { display: block; width: 100%; height: auto; border-radius: 0.75rem; margin: 1.5rem 0; box-shadow: 0 4px 16px -4px rgba(7,98,146,0.18); }

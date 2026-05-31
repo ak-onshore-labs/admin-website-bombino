@@ -1,0 +1,36 @@
+{
+  "name": "bombino-admin-panel",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "eslint",
+    "set-password": "node scripts/set-password.mjs"
+  },
+  "dependencies": {
+    "@tiptap/extension-image": "^3.24.0",
+    "@tiptap/extension-link": "^3.24.0",
+    "@tiptap/extension-underline": "^3.24.0",
+    "@tiptap/pm": "^3.24.0",
+    "@tiptap/react": "^3.24.0",
+    "@tiptap/starter-kit": "^3.24.0",
+    "lucide-react": "^0.511.0",
+    "next": "^15.3.2",
+    "nodemailer": "^8.0.10",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/nodemailer": "^8.0.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "^15.3.2",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
