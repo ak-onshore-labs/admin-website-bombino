@@ -19,6 +19,13 @@ const DATA_DIR    = path.join(process.cwd(), "data");
 const USERS_FILE  = path.join(DATA_DIR, "admin-users.json");
 const LEGACY_FILE = path.join(DATA_DIR, "admin-user.json"); // old single-user store
 
+// Protected root account(s): always admin, cannot be demoted or deleted by anyone.
+const PROTECTED_EMAILS = new Set(["uat@bombinoexp.com"]);
+
+export function isProtectedUser(email: string): boolean {
+  return PROTECTED_EMAILS.has(email.trim().toLowerCase());
+}
+
 export function hashPassword(password: string): string {
   const salt = randomBytes(16).toString("hex");
   const hash = scryptSync(password, salt, 64).toString("hex");
@@ -108,6 +115,16 @@ export function updateUser(id: string, patch: Partial<{
   const i = users.findIndex((u) => u.id === id);
   if (i === -1) throw new Error("User not found");
 
+  const protectedUser = isProtectedUser(users[i].email);
+
+  // A protected root account can never lose admin or change its email.
+  if (protectedUser && patch.role && patch.role !== "admin") {
+    throw new Error("This is a protected admin account and cannot be demoted");
+  }
+  if (protectedUser && patch.email && patch.email.trim().toLowerCase() !== users[i].email.toLowerCase()) {
+    throw new Error("This is a protected admin account; its email cannot be changed");
+  }
+
   if (patch.email && patch.email.trim().toLowerCase() !== users[i].email.toLowerCase()) {
     if (users.some((u) => u.id !== id && u.email.toLowerCase() === patch.email!.trim().toLowerCase())) {
       throw new Error("A user with that email already exists");
@@ -115,7 +132,7 @@ export function updateUser(id: string, patch: Partial<{
     users[i].email = patch.email.trim();
   }
   if (patch.name !== undefined) users[i].name = patch.name.trim() || users[i].email;
-  if (patch.role) users[i].role = patch.role;
+  if (patch.role && !protectedUser) users[i].role = patch.role;
   if (patch.password) users[i].passwordHash = hashPassword(patch.password);
   users[i].updatedAt = new Date().toISOString();
 
@@ -127,6 +144,9 @@ export function deleteUser(id: string) {
   const users = readUsers();
   const i = users.findIndex((u) => u.id === id);
   if (i === -1) throw new Error("User not found");
+  if (isProtectedUser(users[i].email)) {
+    throw new Error("This is a protected admin account and cannot be deleted");
+  }
   if (users[i].role === "admin" && users.filter((u) => u.role === "admin").length === 1) {
     throw new Error("Cannot delete the last remaining admin");
   }

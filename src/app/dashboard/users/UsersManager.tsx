@@ -2,12 +2,13 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { UserPlus, Shield, Trash2, KeyRound, X } from "lucide-react";
+import { UserPlus, Shield, Trash2, KeyRound, X, Lock } from "lucide-react";
 
 type Role = "admin" | "editor";
 interface UserRow {
   id: string; email: string; name: string; role: Role;
   createdAt: string; updatedAt: string;
+  protected?: boolean;
 }
 
 const ROLE_LABEL: Record<Role, string> = { admin: "Admin", editor: "Editor" };
@@ -93,25 +94,39 @@ export function UsersManager({
           {users.map((u) => (
             <div key={u.id} className="grid grid-cols-[1fr_140px_110px_90px] gap-4 px-6 py-4 items-center">
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-slate-900 truncate">
+                <p className="text-sm font-semibold text-slate-900 truncate flex items-center gap-1.5">
                   {u.name}
                   {u.id === currentUserId && (
-                    <span className="ml-2 text-[0.65rem] font-bold text-[#076292] bg-[#076292]/10 px-1.5 py-0.5 rounded">YOU</span>
+                    <span className="text-[0.65rem] font-bold text-[#076292] bg-[#076292]/10 px-1.5 py-0.5 rounded">YOU</span>
+                  )}
+                  {u.protected && (
+                    <span title="Protected root admin — locked" className="inline-flex items-center gap-0.5 text-[0.6rem] font-bold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">
+                      <Lock className="w-2.5 h-2.5" /> ROOT
+                    </span>
                   )}
                 </p>
                 <p className="text-xs text-slate-400 truncate">{u.email}</p>
               </div>
 
-              {/* Role selector */}
-              <select
-                value={u.role}
-                onChange={(e) => changeRole(u, e.target.value as Role)}
-                className="text-xs font-semibold rounded-lg border border-slate-200 px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-[#076292]"
-                title={ROLE_DESC[u.role]}
-              >
-                <option value="admin">Admin</option>
-                <option value="editor">Editor</option>
-              </select>
+              {/* Role — locked for protected accounts */}
+              {u.protected ? (
+                <span
+                  title="This account is permanently an admin and cannot be changed"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 w-fit"
+                >
+                  <Lock className="w-3 h-3" /> Admin
+                </span>
+              ) : (
+                <select
+                  value={u.role}
+                  onChange={(e) => changeRole(u, e.target.value as Role)}
+                  className="text-xs font-semibold rounded-lg border border-slate-200 px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-[#076292]"
+                  title={ROLE_DESC[u.role]}
+                >
+                  <option value="admin">Admin</option>
+                  <option value="editor">Editor</option>
+                </select>
+              )}
 
               <span className="text-xs text-slate-400">{formatDate(u.createdAt)}</span>
 
@@ -123,7 +138,7 @@ export function UsersManager({
                 >
                   <KeyRound className="w-4 h-4" />
                 </button>
-                {u.id !== currentUserId && (
+                {u.id !== currentUserId && !u.protected && (
                   <button
                     onClick={() => remove(u)}
                     title="Delete user"

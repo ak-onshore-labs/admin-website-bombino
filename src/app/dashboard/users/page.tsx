@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
-import { readUsers } from "@/lib/users";
+import { readUsers, isProtectedUser } from "@/lib/users";
 import { UsersManager } from "./UsersManager";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +13,7 @@ export default async function UsersPage() {
   const users = readUsers().map((u) => ({
     id: u.id, email: u.email, name: u.name, role: u.role,
     createdAt: u.createdAt, updatedAt: u.updatedAt,
+    protected: isProtectedUser(u.email),
   }));
 
   return (
