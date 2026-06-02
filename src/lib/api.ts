@@ -44,12 +44,21 @@ export async function getAllPosts(): Promise<BlogPost[]> {
   return res.json();
 }
 
+async function parseError(res: Response, fallback: string): Promise<string> {
+  try {
+    const err = await res.json();
+    return err.error ?? fallback;
+  } catch {
+    return `${fallback} (HTTP ${res.status})`;
+  }
+}
+
 export async function getPost(slug: string): Promise<BlogPost> {
   const res = await fetch(`${websiteUrl}/api/blog/${slug}`, {
     headers: adminHeaders,
     cache: "no-store",
   });
-  if (!res.ok) throw new Error("Failed to fetch post");
+  if (!res.ok) throw new Error(await parseError(res, "Failed to fetch post"));
   return res.json();
 }
 
@@ -59,10 +68,7 @@ export async function createPost(data: Partial<BlogPost>): Promise<BlogPost> {
     headers: adminHeaders,
     body: JSON.stringify(data),
   });
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error ?? "Failed to create post");
-  }
+  if (!res.ok) throw new Error(await parseError(res, "Failed to create post"));
   return res.json();
 }
 
@@ -72,10 +78,7 @@ export async function updatePost(slug: string, data: Partial<BlogPost>): Promise
     headers: adminHeaders,
     body: JSON.stringify(data),
   });
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error ?? "Failed to update post");
-  }
+  if (!res.ok) throw new Error(await parseError(res, "Failed to update post"));
   return res.json();
 }
 
@@ -84,8 +87,5 @@ export async function deletePost(slug: string): Promise<void> {
     method: "DELETE",
     headers: adminHeaders,
   });
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error ?? "Failed to delete post");
-  }
+  if (!res.ok) throw new Error(await parseError(res, "Failed to delete post"));
 }
