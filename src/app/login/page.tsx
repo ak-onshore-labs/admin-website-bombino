@@ -156,11 +156,6 @@ export default function LoginPage() {
             )}
           </button>
 
-          <div className="text-center pt-1">
-            <Link href="/forgot" className="text-xs text-slate-400 hover:text-[#FBAD1F] transition-colors">
-              Forgot your password?
-            </Link>
-          </div>
         </form>
 
         <p className="text-center text-slate-600 text-xs mt-6">
