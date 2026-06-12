@@ -89,3 +89,26 @@ export async function deletePost(slug: string): Promise<void> {
   });
   if (!res.ok) throw new Error(await parseError(res, "Failed to delete post"));
 }
+
+export interface SiteSettings {
+  teamEmail: string;
+}
+
+export async function getSettings(): Promise<SiteSettings> {
+  const res = await fetch(`${websiteUrl}/api/settings`, {
+    headers: adminHeaders,
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(await parseError(res, "Failed to fetch settings"));
+  return res.json();
+}
+
+export async function updateTeamEmail(teamEmail: string): Promise<SiteSettings> {
+  const res = await fetch(`${websiteUrl}/api/settings`, {
+    method: "PUT",
+    headers: adminHeaders,
+    body: JSON.stringify({ teamEmail }),
+  });
+  if (!res.ok) throw new Error(await parseError(res, "Failed to save settings"));
+  return res.json();
+}
